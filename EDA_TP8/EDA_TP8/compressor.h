@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <string>
 class compressor
 {
 public:
@@ -12,10 +14,12 @@ private:
 	Recive el umbral de comparasión para el algoritmo(threshhold).
 	Ademas, devuelve en su nombre si la compresión fue o no exitosa.
 	*/
-	bool compression();
-	
+	bool compression(int step, unsigned char *inicio);
+	std::string filename;
 	unsigned char* pixelArray;
 	unsigned char* compressedImg;
 	int threshhold;
+	unsigned int width;
+	unsigned int heigth;
 };
 
