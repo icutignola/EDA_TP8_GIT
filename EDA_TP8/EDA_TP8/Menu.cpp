@@ -4,7 +4,6 @@
 Menu::Menu(string arrayPath[], unsigned int numberPath)
 {
 	numberImages = numberPath;
-	
 	arrayImages = new Image[numberImages];	// Genero la cantidad de imagenes que me indica numberPath
 
 	display = NULL;
@@ -49,6 +48,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 0].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 0].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 0].isSelected() == NOT_SELECTED)
 						{
@@ -62,6 +62,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 1].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 1].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 1].isSelected() == NOT_SELECTED)
 						{
@@ -75,6 +76,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 2].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 2].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 2].isSelected() == NOT_SELECTED)
 						{
@@ -88,6 +90,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 3].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 3].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 3].isSelected() == NOT_SELECTED)
 						{
@@ -101,6 +104,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 4].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 4].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 4].isSelected() == NOT_SELECTED)
 						{
@@ -114,6 +118,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 5].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 5].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 5].isSelected() == NOT_SELECTED)
 						{
@@ -127,6 +132,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 6].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 6].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 6].isSelected() == NOT_SELECTED)
 						{
@@ -140,6 +146,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 7].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 7].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 7].isSelected() == NOT_SELECTED)
 						{
@@ -153,6 +160,7 @@ void Menu::enterMenu(void)
 						if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 8].isSelected() == SELECTED)
 						{
 							arrayImages[(numberPage*IMAGE_PER_SCREEN) + 8].selectImage();
+							numberImagesSelected++;
 						}
 						else if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + 8].isSelected() == NOT_SELECTED)
 						{
@@ -191,6 +199,21 @@ void Menu::enterMenu(void)
 			}
 		}
 	}
+
+	pathsSelected = new string[numberImagesSelected];
+
+	for (int i = 0; i < numberImages; i++)
+	{
+		if (arrayImages[i].isSelected() == SELECTED)
+		{
+			pathsSelected[i] = arrayImages[i].getPath();
+		}
+	}
+}
+
+string * Menu::getPathsSelected(void)
+{
+	return pathsSelected;
 }
 
 bool Menu::initAllegro(void)
@@ -247,13 +270,13 @@ void Menu::printImages(void)
 	float y0Rectangle = 0;
 	ALLEGRO_COLOR colorRojo = al_map_rgb(255, 0, 0);
 	ALLEGRO_COLOR colorVerde = al_map_rgb(0, 255, 0);
-	ALLEGRO_COLOR colorBlanco = al_map_rgb(0, 0, 0);
+	ALLEGRO_COLOR colorNegro = al_map_rgb(255, 255, 255);
 
-	al_clear_to_color(colorBlanco);
+	al_clear_to_color(colorNegro);
 
-	for (int i = 0; (i < IMAGE_PER_LINE) && (numberImageAux < IMAGE_PER_SCREEN); i++, x += (WIDE / IMAGE_PER_LINE), x0Rectangle += (WIDE / IMAGE_PER_LINE))
+	for (int i = 0; (i < IMAGE_PER_LINE) && (numberImageAux < numberImages); i++, x += (WIDE / IMAGE_PER_LINE), x0Rectangle += (WIDE / IMAGE_PER_LINE))
 	{
-		for (int j = 0; (j < IMAGE_PER_COLUMN) && (numberImageAux < IMAGE_PER_SCREEN); j++, y += (HEITH / IMAGE_PER_COLUMN), y0Rectangle += (HEITH / IMAGE_PER_COLUMN))
+		for (int j = 0; (j < IMAGE_PER_COLUMN) && (numberImageAux < numberImages); j++, y += (HEITH / IMAGE_PER_COLUMN), y0Rectangle += (HEITH / IMAGE_PER_COLUMN))
 		{
 			if (arrayImages[(numberPage*IMAGE_PER_SCREEN) + numberImageAux].isSelected() == SELECTED)
 			{

@@ -16,6 +16,7 @@ public:
 	void selectImage(void);
 	void deselectImage(void);
 	ALLEGRO_BITMAP * getBitmapImage(void);
+	string getPath(void);
 
 private:
 

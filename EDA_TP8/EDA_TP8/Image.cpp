@@ -49,3 +49,8 @@ ALLEGRO_BITMAP * Image::getBitmapImage(void)
 {
 	return image;
 }
+
+string Image::getPath(void)
+{
+	return localPath;
+}

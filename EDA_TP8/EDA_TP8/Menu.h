@@ -24,6 +24,7 @@ class Menu
 public:
 	Menu(string arrayPath[], unsigned int numberPath);
 	void enterMenu(void);
+	string * getPathsSelected(void);
 
 
 private:
@@ -37,5 +38,7 @@ private:
 	bool exitMenu;
 	void printImages(void);
 	unsigned int numberImages;
+	unsigned int numberImagesSelected;
+	string *  pathsSelected;
 
 };
