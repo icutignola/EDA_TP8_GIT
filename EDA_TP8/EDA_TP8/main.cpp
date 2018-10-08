@@ -9,7 +9,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "Menu.h"
+#include "MenuCompress.h"
 
 
 using namespace std;
@@ -23,16 +23,12 @@ int main(void)
 {
 	unsigned int countPngFiles = 0;
 	const char * paths = "./";
+	char * pathSelected;
 
+	vector<string> filesS;	// Vector para guardar los archivos .png
 
-
-
-	vector<string> filesS;
-
-
-
+	//****************  BUSCO LOS ARCHIVOS .PNG  *****************
 	path p(paths);
-
 	if (exists(p))
 	{
 		if (is_directory(p))
@@ -52,15 +48,20 @@ int main(void)
 	{
 		cout << " No existe la ruta" << endl;
 	}
+	//************************************************************
 
 	if (countPngFiles != 0)
 	{
-		Menu menu(filesS, 12);
-		menu.enterMenu();
-		menu.~Menu();
-		string * pathSelected = menu.getPathsSelected();
-		//printf("%s", pathSelected[0]);
+		MenuCompress menuC(filesS, 12);
+		menuC.enterMenu();
+		unsigned int numberSelected = menuC.getNumberPathsSelected();
+		for (unsigned int i = 0; i < numberSelected; ++i)
+		{
+			pathSelected = menuC.getPathSelected(i);
+			//void FuncionParaComprimir (pathSeleted);
+		}
 		getchar();
+		menuC.~MenuCompress();
 	}
 	else
 	{

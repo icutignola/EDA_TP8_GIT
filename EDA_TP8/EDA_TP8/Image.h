@@ -19,10 +19,8 @@ public:
 	bool isSelected(void);
 	void selectImage(void);
 	void deselectImage(void);
-	ALLEGRO_BITMAP * getBitmapImage(void);
 	string getPath(void);
 	char localPathC[20];
-	ALLEGRO_BITMAP *image;
 
 
 

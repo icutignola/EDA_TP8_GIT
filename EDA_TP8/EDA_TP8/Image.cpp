@@ -8,9 +8,7 @@ Image::Image(void)
 
 void Image::initImage(const char  *path)
 {
-
 	strcpy(localPathC, path);
-	printf("%s", localPathC);
 }
 
 bool Image::isSelected(void)
@@ -37,11 +35,6 @@ void Image::deselectImage(void)
 	selected = false;
 }
 
-
-ALLEGRO_BITMAP * Image::getBitmapImage(void)
-{
-	return image;
-}
 
 string Image::getPath(void)
 {

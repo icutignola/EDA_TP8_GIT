@@ -1,42 +1,100 @@
-#include "Menu.h"
+#include "MenuCompress.h"
 
 
-Menu::Menu(vector<string>& arrayPath, unsigned int numberPath)
+MenuCompress::MenuCompress(vector<string>& arrayPath, unsigned int numberPath)
 {
-	numberImages = numberPath;
+	numberImages = numberPath;				// Guardo el numero de archivos encontrados
 	arrayImages = new Image[numberImages];	// Genero la cantidad de imagenes que me indica numberPath
+	unsigned int i = 0;						// Variable que se utiliza para recorrer el arreglo de imagenes
+	char * imagePath = NULL;				// Puntero que se utiliza para guardar el path de una imagen
+	numberPage = 0;							// Contador que se utiliza para almacenar la cantidad de paginas 
+	exitMenu = false;						// No salir del menu
 	display = NULL;
 	colaEventos = NULL;
 
-	for (vector<string>::iterator iter = arrayPath.begin(); iter != arrayPath.end(); ++iter)
-		cout << *iter << endl;
 
-	//initAllegro(arrayPath);
-
-	if (arrayImages != NULL)
+	//**********************  Inicializa Allegro  **********************************
+	if (!al_init())
 	{
-		for (unsigned int i = 0; i < numberImages; i++)
-		{
-			//cout << arrayPath[i];
-			//arrayImages->initImage(arrayPath[i].c_str);
-		}
+		cout << "Error al inicializar allegro" << endl;
 	}
 
+	if (!al_install_keyboard())
+	{
+		cout << "Error al inicializar el teclado" << endl;
+	}
 
+	if (!al_init_image_addon())
+	{
+		cout << "Error al inicializar los addons de imagenes" << endl;
+	}
 
-	numberPage = 0;
+	colaEventos = al_create_event_queue();
+	if (!colaEventos)
+	{
+		cout << "Error al inicializar la cola de eventos" << endl;
+		al_shutdown_image_addon();
+
+	}
+
+	if (!al_init_primitives_addon())
+	{
+		cout << "Error al inicializar las primitivas" << endl;
+		al_shutdown_image_addon();
+		al_destroy_event_queue(colaEventos);
+	}
+
+	display = al_create_display(WIDE, HEITH);
+	if (!display)
+	{
+		cout << "Error al inicializar el display" << endl;
+		al_shutdown_image_addon();
+		al_shutdown_primitives_addon();
+		al_destroy_event_queue(colaEventos);
+
+	}
+
+	for (vector<string>::iterator iter = arrayPath.begin(); iter != arrayPath.end(); ++iter)
+	{
+		imagePath = convert(*iter);
+		images.push_back(al_load_bitmap(imagePath));
+		//arrayImages[i].image = al_load_bitmap(imagePath);
+		if (images[i] == NULL)
+		{
+			cout << "Error al iniciar la imagen numero: " << i << endl;
+		}
+		i++;
+	}
+
+	al_register_event_source(colaEventos, al_get_display_event_source(display));
+	al_register_event_source(colaEventos, al_get_keyboard_event_source());
+
+	//********************************************************************************************************
+
+	//******************************  Carga el Path de cada imagen  ******************************************
+	if (arrayImages != NULL)
+	{
+		i = 0;
+		for (vector<string>::iterator iter = arrayPath.begin(); iter != arrayPath.end(); ++iter)
+		{
+			imagePath = convert(*iter);
+			arrayImages[i].initImage(imagePath);
+			i++;
+		}
+	}
+	//********************************************************************************************************	
+
+	//******************************  Calcula la cantidad de paginas maxima  *********************************
 	numberPagesMax = numberImages / IMAGE_PER_SCREEN;
 	if (numberImages % IMAGE_PER_SCREEN == 0);	//No hace nada
 	else
 	{
 		numberPagesMax++;
 	}
-
-	exitMenu = false;
-
+	//********************************************************************************************************	
 }
 
-Menu::~Menu(void)
+MenuCompress::~MenuCompress(void)
 {
 	al_destroy_display(display);
 	al_shutdown_image_addon();
@@ -44,7 +102,7 @@ Menu::~Menu(void)
 	al_destroy_event_queue(colaEventos);
 }
 
-void Menu::enterMenu(void)
+void MenuCompress::enterMenu(void)
 {
 	while (!exitMenu)
 	{
@@ -243,98 +301,21 @@ void Menu::enterMenu(void)
 
 	}
 
-	//pathsSelected = new char*[0];
-	//unsigned int j = 0;
-
-	//cout << arrayImages[0].localPath;
-
-	//pathsSelected[0] = arrayImages[0].localPathC;
-
-	/*
-	for (unsigned int i = 0; i < numberImages && j < numberImagesSelected ; i++)
-	{
-		if (arrayImages[i].isSelected() == SELECTED)
-		{
-			pathsSelected[j] = arrayImages[i].getPath();
-			j++;
-		}
-	}
-	*/
-}
-
-string * Menu::getPathsSelected(void)
-{
-	//return pathsSelected;
-	return 0;
-}
-
-bool Menu::initAllegro(vector<string>& arrayPath)
-{
-	if (!al_init())
-	{
-		cout << "Error al inicializar allegro" << endl;
-		return false;
-	}
-
-	if (!al_install_keyboard())
-	{
-		cout << "Error al inicializar el teclado" << endl;
-		return false;
-	}
-
-	if (!al_init_image_addon())
-	{
-		cout << "Error al inicializar los addons de imagenes" << endl;
-		return false;
-	}
-
-
-	colaEventos = al_create_event_queue();
-	if (!colaEventos)
-	{
-		cout << "Error al inicializar la cola de eventos" << endl;
-		al_shutdown_image_addon();
-		return false;
-
-	}
-
-
-	if (!al_init_primitives_addon())
-	{
-		cout << "Error al inicializar las primitivas" << endl;
-		al_shutdown_image_addon();
-		al_destroy_event_queue(colaEventos);
-		return false;
-	}
-
-	display = al_create_display(WIDE, HEITH);
-	if (!display)
-	{
-		cout << "Error al inicializar el display" << endl;
-		al_shutdown_image_addon();
-		al_shutdown_primitives_addon();
-		al_destroy_event_queue(colaEventos);
-		return false;
-	}
-
-
 
 	for (unsigned int i = 0; i < numberImages; i++)
 	{
-		//arrayImages[i].image = al_load_bitmap(arrayPath[i].c_str);
-		if (arrayImages[i].image == NULL)
+		if (arrayImages[i].isSelected() == SELECTED)
 		{
-			cout << "Error" << endl;
+			pathsSelected.push_back(arrayImages[i].localPathC);
 		}
 	}
 
-	al_register_event_source(colaEventos, al_get_display_event_source(display));
-	al_register_event_source(colaEventos, al_get_keyboard_event_source());
-
-	return true;
 }
 
-void Menu::printImages(void)
+
+
+
+void MenuCompress::printImages(void)
 {
 	unsigned int numberImageAux = (numberPage*IMAGE_PER_SCREEN);
 	float x = 0;
@@ -362,8 +343,8 @@ void Menu::printImages(void)
 				al_draw_filled_rectangle(x0Rectangle, y0Rectangle, x0Rectangle + 333.33, y0Rectangle + 200, colorRojo);
 			}
 
-			al_draw_scaled_bitmap(arrayImages[numberImageAux].image, 0, 0, al_get_bitmap_width(arrayImages[numberImageAux].image), al_get_bitmap_height(arrayImages[numberImageAux].image), x, y, 300, 180, 0);
-
+			//al_draw_scaled_bitmap(arrayImages[numberImageAux].image, 0, 0, al_get_bitmap_width(arrayImages[numberImageAux].image), al_get_bitmap_height(arrayImages[numberImageAux].image), x, y, 300, 180, 0);
+			al_draw_scaled_bitmap(images[numberImageAux], 0, 0, al_get_bitmap_width(images[numberImageAux]), al_get_bitmap_height(images[numberImageAux]), x, y, 300, 180, 0);
 			numberImageAux++;
 		}
 		y0Rectangle = 0;
@@ -373,3 +354,33 @@ void Menu::printImages(void)
 	al_flip_display();
 
 }
+
+char * MenuCompress::getPathSelected(unsigned int number)
+{
+	if (numberImagesSelected == 0)
+	{
+		cout << "No hay imagenes seleccionadas" << endl;
+		return NULL;
+	}
+	else
+	{
+		char * answer;
+		answer = convert(pathsSelected[number]);
+		return answer;
+	}
+
+}
+
+char * MenuCompress::convert(const std::string & s)
+{
+	char *pc = new char[s.size() + 1];
+	strcpy(pc, s.c_str());
+	return pc;
+}
+
+unsigned int MenuCompress::getNumberPathsSelected(void)
+{
+	return numberImagesSelected;
+}
+
+
