@@ -1,5 +1,8 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <cstring>
+#include <vector>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h> 
@@ -8,6 +11,9 @@
 #include "Image.h"
 
 using namespace std;
+using std::vector;
+using std::string;
+
 
 #define WIDE				1000
 #define HEITH				600
@@ -22,16 +28,17 @@ using namespace std;
 class Menu
 {
 public:
-	Menu(string arrayPath[], unsigned int numberPath);
+	Menu(vector<string>& arrayPath, unsigned int numberPath);
+	~Menu(void);
 	void enterMenu(void);
 	string * getPathsSelected(void);
+	ALLEGRO_DISPLAY *display;
 
 
 private:
 
 	Image * arrayImages;
-	bool initAllegro(void);
-	ALLEGRO_DISPLAY *display;
+	bool initAllegro(vector<string>& arrayPath);
 	ALLEGRO_EVENT_QUEUE *colaEventos;
 	unsigned int numberPage;
 	unsigned int numberPagesMax;
@@ -39,6 +46,9 @@ private:
 	void printImages(void);
 	unsigned int numberImages;
 	unsigned int numberImagesSelected;
-	string *  pathsSelected;
+	char *  pathsSelected;
+	ALLEGRO_EVENT evento;
+	char* Paths[];
+
 
 };

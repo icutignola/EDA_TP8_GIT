@@ -1,39 +1,31 @@
 #include "Image.h"
 
-using namespace std;
 
 Image::Image(void)
 {
-
+	selected = false;
 }
 
-void Image::initImage(string path)
+void Image::initImage(const char  *path)
 {
-	deselectImage();
-	localPath = path;
-	alInitImage();
+
+	strcpy(localPathC, path);
+	printf("%s", localPathC);
 }
 
 bool Image::isSelected(void)
 {
-	return selected;
-}
-
-bool Image::alInitImage(void)
-{
-	const char * localPathC = localPath.c_str();
-
-	image = al_load_bitmap(localPathC);
-	if (!image) 
-	{
-		cout << "Error al cargar la imagen (" << localPathC << ")" << endl;
-		return false;
-	}
-	else
+	if (selected)
 	{
 		return true;
 	}
+	else
+	{
+		return false;
+	}
 }
+
+
 
 void Image::selectImage(void)
 {
@@ -44,6 +36,7 @@ void Image::deselectImage(void)
 {
 	selected = false;
 }
+
 
 ALLEGRO_BITMAP * Image::getBitmapImage(void)
 {
