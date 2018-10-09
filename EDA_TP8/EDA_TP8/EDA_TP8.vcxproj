@@ -116,15 +116,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="compressor.cpp" />
+    <ClCompile Include="decode.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="infoDecompress.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuCompress.cpp" />
     <ClCompile Include="MenuDescompress.cpp" />
+    <ClCompile Include="point.cpp" />
+    <ClCompile Include="point.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compressor.h" />
+    <ClInclude Include="decode.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="infoDecompress.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="MenuCompress.h" />
     <ClInclude Include="MenuDescompress.h" />
