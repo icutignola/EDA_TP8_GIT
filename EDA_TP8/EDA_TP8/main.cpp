@@ -10,7 +10,11 @@
 #include <stdio.h>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
+#include <math.h>
 
+#include "decode.h"
+#include "infoDecompress.h"
+#include "point.h"
 #include "MenuCompress.h"
 #include "MenuDescompress.h"
 
@@ -31,7 +35,7 @@ int main(int argc, char * argv[])
 	string pathS(paths);
 	char * pathSelected;
 
-
+	/*
 	//**************************  COMPRESS  *******************************
 	vector<string> filesC;	// Vector para guardar los archivos .png
 
@@ -81,8 +85,9 @@ int main(int argc, char * argv[])
 		getchar();
 	}
 	//*********************************************************************
+	*/
 
-	/*
+	
 	//************************  DESCOMPRESS  ******************************
 		unsigned int countTxtFiles = 0;
 		vector<string> filesD;	// Vector para guardar los archivos .png
@@ -119,7 +124,22 @@ int main(int argc, char * argv[])
 			{
 				pathSelected = menuD.getPathSelected(i);
 				cout << pathSelected << endl;
-				//void FuncionParaComprimir (pathSeleted);
+				unsigned int size;
+				unsigned char ** matrix = decodeImage(pathSelected, &size);
+				for (int i = 0; i < sqrt(size); i++)
+				{
+					for (int j = 0; j < sqrt(size) * 4; j++)
+					{
+						if ((j + 1) % 4 == 0)
+							printf("%02x ", matrix[i][j]);
+						else
+							printf("%03u ", matrix[i][j]);
+						if ((j + 1) % 4 == 0)
+							putchar('|');
+					}
+					putchar('\n');
+				}
+				freeMatrix(matrix, sqrt(size), sqrt(size));
 			}
 			getchar();
 			menuD.~MenuDescompress();
@@ -130,7 +150,7 @@ int main(int argc, char * argv[])
 			cout << "Presione enter para finalizar el programa" << endl;
 			getchar();
 		}
-		*/
+		
 		//*********************************************************************
 
 	return 0;
