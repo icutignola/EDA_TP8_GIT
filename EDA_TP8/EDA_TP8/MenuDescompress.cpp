@@ -1,7 +1,7 @@
-#include "MenuCompress.h"
+#include "MenuDescompress.h"
 
 
-MenuCompress::MenuCompress(vector<string>& arrayPath, unsigned int numberPath)
+MenuDescompress::MenuDescompress(vector<string>& arrayPath, unsigned int numberPath)
 {
 	numberImages = numberPath;				// Guardo el numero de archivos encontrados
 	arrayImages = new Image[numberImages];	// Genero la cantidad de imagenes que me indica numberPath
@@ -57,14 +57,34 @@ MenuCompress::MenuCompress(vector<string>& arrayPath, unsigned int numberPath)
 	for (vector<string>::iterator iter = arrayPath.begin(); iter != arrayPath.end(); ++iter)
 	{
 		imagePath = convert(*iter);
-		images.push_back(al_load_bitmap(imagePath));
-		//arrayImages[i].image = al_load_bitmap(imagePath);
+		images.push_back(al_load_bitmap("./imagen_compress/compress.png"));
 		if (images[i] == NULL)
 		{
 			cout << "Error al iniciar la imagen numero: " << i << endl;
 		}
 		i++;
 	}
+
+	if (al_init_font_addon())
+	{
+		if (al_init_ttf_addon())
+		{
+			fuente = al_load_ttf_font("fuente.ttf", 20, 0);
+			if (fuente != NULL)
+			{
+				cout << "Se inicializo correctamente la fuente" << endl;
+			}
+
+
+		}
+
+
+	}
+
+
+
+
+
 
 	al_register_event_source(colaEventos, al_get_display_event_source(display));
 	al_register_event_source(colaEventos, al_get_keyboard_event_source());
@@ -94,20 +114,21 @@ MenuCompress::MenuCompress(vector<string>& arrayPath, unsigned int numberPath)
 	//********************************************************************************************************	
 }
 
-MenuCompress::~MenuCompress(void)
+MenuDescompress::~MenuDescompress(void)
 {
 	for (vector<ALLEGRO_BITMAP*>::iterator iter = images.begin(); iter != images.end(); ++iter)
 	{
 		al_destroy_bitmap(*iter);
 	}
+	al_shutdown_image_addon();
+	al_destroy_font(fuente);
+	al_shutdown_ttf_addon();
 	al_shutdown_primitives_addon();
 	al_destroy_event_queue(colaEventos);
-	al_shutdown_image_addon();
 	al_destroy_display(display);
 }
 
-
-void MenuCompress::enterMenu(void)
+void MenuDescompress::enterMenu(void)
 {
 	while (!exitMenu)
 	{
@@ -317,7 +338,7 @@ void MenuCompress::enterMenu(void)
 
 }
 
-void MenuCompress::printImages(void)
+void MenuDescompress::printImages(void)
 {
 	unsigned int numberImageAux = (numberPage*IMAGE_PER_SCREEN);
 	float x = 75;
@@ -331,7 +352,7 @@ void MenuCompress::printImages(void)
 
 	al_clear_to_color(colorNegro);
 
-	for (int i = 0; (i < IMAGE_PER_LINE) && (numberImageAux < numberImages); i++, x += 333, 3, x0Rectangle += 333.33)
+	for (int i = 0; (i < IMAGE_PER_LINE) && (numberImageAux < numberImages); i++, x += 333.33, x0Rectangle += 333.33)
 	{
 		for (int j = 0; (j < IMAGE_PER_COLUMN) && (numberImageAux < numberImages); j++, y += 200, y0Rectangle += 200)
 		{
@@ -345,8 +366,8 @@ void MenuCompress::printImages(void)
 				al_draw_filled_rectangle(x0Rectangle, y0Rectangle, x0Rectangle + 333.33, y0Rectangle + 200, colorRojo);
 			}
 
-			//al_draw_scaled_bitmap(arrayImages[numberImageAux].image, 0, 0, al_get_bitmap_width(arrayImages[numberImageAux].image), al_get_bitmap_height(arrayImages[numberImageAux].image), x, y, 300, 180, 0);
-			al_draw_scaled_bitmap(images[numberImageAux], 0, 0, al_get_bitmap_width(images[numberImageAux]), al_get_bitmap_height(images[numberImageAux]), x, y, 180, 180, 0);
+			al_draw_scaled_bitmap(images[numberImageAux], 0, 0, al_get_bitmap_width(images[numberImageAux]), al_get_bitmap_height(images[numberImageAux]), x, y, 150, 150, 0);
+			al_draw_text(fuente, colorNegro, x0Rectangle + 5, y0Rectangle + 170, ALLEGRO_ALIGN_LEFT, arrayImages[numberImageAux].localPathC);
 			numberImageAux++;
 		}
 		y0Rectangle = 0;
@@ -357,7 +378,7 @@ void MenuCompress::printImages(void)
 
 }
 
-char * MenuCompress::getPathSelected(unsigned int number)
+char * MenuDescompress::getPathSelected(unsigned int number)
 {
 	if (numberImagesSelected == 0)
 	{
@@ -373,16 +394,14 @@ char * MenuCompress::getPathSelected(unsigned int number)
 
 }
 
-char * MenuCompress::convert(const std::string & s)
+char * MenuDescompress::convert(const std::string & s)
 {
 	char *pc = new char[s.size() + 1];
 	strcpy(pc, s.c_str());
 	return pc;
 }
 
-unsigned int MenuCompress::getNumberPathsSelected(void)
+unsigned int MenuDescompress::getNumberPathsSelected(void)
 {
 	return numberImagesSelected;
 }
-
-

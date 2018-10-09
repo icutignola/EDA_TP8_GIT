@@ -120,12 +120,14 @@
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuCompress.cpp" />
+    <ClCompile Include="MenuDescompress.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compressor.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="MenuCompress.h" />
+    <ClInclude Include="MenuDescompress.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

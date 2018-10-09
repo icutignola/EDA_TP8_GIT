@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <ctime>
+#include <cstdio>
 #include <iostream>
 #include <iterator>
 #include <vector>
@@ -10,6 +12,9 @@
 #include <boost/lexical_cast.hpp>
 
 #include "MenuCompress.h"
+#include "MenuDescompress.h"
+
+
 
 
 using namespace std;
@@ -17,15 +22,18 @@ using namespace boost::filesystem;
 
 
 
-
-
-int main(void)
+int main(int argc, char * argv[])
 {
 	unsigned int countPngFiles = 0;
-	const char * paths = "./";
+	const char * paths = "./imagenes/";
+	const char * pathD = "./imegenes_comprimidas/";
+
+	string pathS(paths);
 	char * pathSelected;
 
-	vector<string> filesS;	// Vector para guardar los archivos .png
+
+	//**************************  COMPRESS  *******************************
+	vector<string> filesC;	// Vector para guardar los archivos .png
 
 	//****************  BUSCO LOS ARCHIVOS .PNG  *****************
 	path p(paths);
@@ -37,7 +45,9 @@ int main(void)
 			{
 				if (itr->path().extension().string() == ".png")
 				{
-					filesS.push_back(itr->path().filename().string());
+					pathS += itr->path().filename().string();
+					filesC.push_back(pathS);
+					pathS = (paths);
 					countPngFiles++;
 				}
 			}
@@ -52,12 +62,13 @@ int main(void)
 
 	if (countPngFiles != 0)
 	{
-		MenuCompress menuC(filesS, 12);
+		MenuCompress menuC(filesC, countPngFiles);
 		menuC.enterMenu();
 		unsigned int numberSelected = menuC.getNumberPathsSelected();
 		for (unsigned int i = 0; i < numberSelected; ++i)
 		{
 			pathSelected = menuC.getPathSelected(i);
+			cout << pathSelected << endl;
 			//void FuncionParaComprimir (pathSeleted);
 		}
 		getchar();
@@ -69,7 +80,58 @@ int main(void)
 		cout << "Presione enter para finalizar el programa" << endl;
 		getchar();
 	}
+	//*********************************************************************
+
+	/*
+	//************************  DESCOMPRESS  ******************************
+		unsigned int countTxtFiles = 0;
+		vector<string> filesD;	// Vector para guardar los archivos .png
+
+		//****************  BUSCO LOS ARCHIVOS .PNG  *****************
+		path p2(pathD);
+		if (exists(p2))
+		{
+			if (is_directory(p2))
+			{
+				for (directory_iterator itr(p2); itr != directory_iterator(); itr++)
+				{
+					if (itr->path().extension().string() == ".txt")
+					{
+						filesD.push_back(itr->path().filename().string());
+						countTxtFiles++;
+					}
+				}
+
+			}
+		}
+		else
+		{
+			cout << " No existe la ruta" << endl;
+		}
+		//************************************************************
+
+		if (countTxtFiles != 0)
+		{
+			MenuDescompress menuD(filesD, countTxtFiles);
+			menuD.enterMenu();
+			unsigned int numberSelected = menuD.getNumberPathsSelected();
+			for (unsigned int i = 0; i < numberSelected; ++i)
+			{
+				pathSelected = menuD.getPathSelected(i);
+				cout << pathSelected << endl;
+				//void FuncionParaComprimir (pathSeleted);
+			}
+			getchar();
+			menuD.~MenuDescompress();
+		}
+		else
+		{
+			cout << "No hay imagenes .txt para descomprimir" << endl;
+			cout << "Presione enter para finalizar el programa" << endl;
+			getchar();
+		}
+		*/
+		//*********************************************************************
 
 	return 0;
 }
-
